@@ -93,10 +93,26 @@ app.post('/login/google', async (req, res) => {
         });
         const payload = ticket.getPayload();
 
+        // Find user by email
         let user = await User.findOne({ email: payload.email });
 
         if (!user) {
-            return res.status(401).json({ message: 'Unauthorized: User not found' });
+            // If user doesn't exist, create a new user and store the picture
+            user = new User({
+                email: payload.email,
+                name: payload.name,
+                role: 'user',  // Default to 'user' role
+                googleId: payload.sub,
+                picture: payload.picture,  // Save the picture from Google
+                userID: Math.floor(Math.random() * 10000) // Generate a userID if necessary
+            });
+
+            // Save the new user to the database
+            await user.save();
+        } else {
+            // If user exists, update the profile picture (if it has changed)
+            user.picture = payload.picture;  // Ensure the picture is updated
+            await user.save();
         }
 
         // Generate a JWT token with a 1-hour expiration time
@@ -117,6 +133,7 @@ app.post('/login/google', async (req, res) => {
         res.status(401).json({ message: 'Invalid token' });
     }
 });
+
 
 // Use the user routes
 app.use('/users', userRoutes);

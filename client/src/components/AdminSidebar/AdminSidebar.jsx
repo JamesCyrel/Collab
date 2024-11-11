@@ -5,12 +5,12 @@ import "./../components-css/AdminSidebar.css";
 
 export default function AdminSidebar({ isOpen }) {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({ name: "", role: "" });
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
-    const storedUserInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    const storedUserInfo = sessionStorage.getItem("userInfo");
     if (storedUserInfo) {
-      setUserInfo(storedUserInfo);
+      setUserInfo(JSON.parse(storedUserInfo));
     }
   }, []);
 
@@ -22,6 +22,7 @@ export default function AdminSidebar({ isOpen }) {
 
   return (
     <div className={`sidebar ${isOpen ? "open" : ""}`}>
+      {/* Logo */}
       <div className="d-flex justify-content-center">
         <img
           src="./src/assets/userlogo.svg"
@@ -33,12 +34,17 @@ export default function AdminSidebar({ isOpen }) {
 
       {/* User Info */}
       <div className="text-center mb-4">
-        <img
-          src={userInfo.picture}
-          alt="User Profile"
-          className="rounded-circle mb-2"
-          style={{ width: "80px", height: "80px", objectFit: "cover" }}
-        />
+        {/* Display user's profile picture if available */}
+        {userInfo.picture ? (
+          <img
+            src={userInfo.picture}
+            alt="User Profile"
+            className="img-fluid rounded-circle mb-2"
+            style={{ width: "80px", height: "80px" }}
+          />
+        ) : (
+          <MDBIcon icon="user-circle" size="3x" />
+        )}
         <h5>{userInfo.name || "User"}</h5>
         <MDBBadge color="danger" className="text-white">
           {userInfo.role || "Role"}

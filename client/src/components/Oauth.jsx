@@ -36,13 +36,9 @@ export default function Oauth() {
             console.log("Backend response:", data);
 
             if (response.ok) {
-                // Save user information and session token to session storage
+                // Save user info to sessionStorage, including the picture
                 sessionStorage.setItem('authToken', credentialResponse.credential);
-                sessionStorage.setItem('userInfo', JSON.stringify({
-                    name: data.user.name,
-                    role: data.user.role,
-                    picture: data.user.picture
-                }));
+                sessionStorage.setItem('userInfo', JSON.stringify(data.user));
                 sessionStorage.setItem('sessionToken', data.token);
 
                 // Redirect based on user role
@@ -60,6 +56,7 @@ export default function Oauth() {
             alert("An error occurred while logging in.");
         }
     };
+
 
     const onError = () => {
         console.log("Login Failed");
