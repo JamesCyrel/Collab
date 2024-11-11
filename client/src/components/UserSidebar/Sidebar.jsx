@@ -1,19 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MDBListGroup, MDBBadge, MDBBtn, MDBIcon } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
-import "./../components-css/Sidebar.css";
+import "./../components-css/AdminSidebar.css";
 
-export default function Sidebar({ isOpen }) {
+export default function AdminSidebar({ isOpen }) {
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({ name: "", role: "" });
+
+  useEffect(() => {
+    const storedUserInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    if (storedUserInfo) {
+      setUserInfo(storedUserInfo);
+    }
+  }, []);
 
   const handleLogout = () => {
     sessionStorage.removeItem("sessionToken");
+    sessionStorage.removeItem("userInfo");
     navigate("/login");
   };
 
   return (
     <div className={`sidebar ${isOpen ? "open" : ""}`}>
-      {/* Logo */}
       <div className="d-flex justify-content-center">
         <img
           src="./src/assets/userlogo.svg"
@@ -25,10 +33,15 @@ export default function Sidebar({ isOpen }) {
 
       {/* User Info */}
       <div className="text-center mb-4">
-        <MDBIcon icon="user-circle" size="3x" />
-        <h5>Nilo Garciano</h5>
-        <MDBBadge color="warning" className="text-dark">
-          User
+        <img
+          src={userInfo.picture}
+          alt="User Profile"
+          className="rounded-circle mb-2"
+          style={{ width: "80px", height: "80px", objectFit: "cover" }}
+        />
+        <h5>{userInfo.name || "User"}</h5>
+        <MDBBadge color="warning" className="text-white">
+          {userInfo.role || "Role"}
         </MDBBadge>
       </div>
 
@@ -38,13 +51,7 @@ export default function Sidebar({ isOpen }) {
           <MDBIcon fas icon="tachometer-alt" className="me-3" /> Dashboard
         </MDBBtn>
         <MDBBtn href="/documents" className="mb-4 custom-btn">
-          <MDBIcon fas icon="file-alt" className="me-3" /> Documents
-        </MDBBtn>
-        <MDBBtn href="/request-history" className="mb-4 custom-btn">
-          <MDBIcon fas icon="history" className="me-3" /> Request History
-        </MDBBtn>
-        <MDBBtn href="/account" className="mb-4 custom-btn">
-          <MDBIcon fas icon="bell" className="me-3" /> Notification
+          <MDBIcon fas icon="file-alt" className="me-3" /> Document Request
         </MDBBtn>
         <MDBBtn href="/account" className="mb-4 custom-btn">
           <MDBIcon fas icon="user-cog" className="me-3" /> Account

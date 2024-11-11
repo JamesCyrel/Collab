@@ -108,7 +108,7 @@ app.post('/login/google', async (req, res) => {
 
         res.json({
             message: 'Login successful',
-            user: { name: user.name, email: user.email, role: user.role },
+            user: { name: user.name, email: user.email, role: user.role, picture: user.picture },
             token: sessionToken,
         });
         console.log("User found:", user);

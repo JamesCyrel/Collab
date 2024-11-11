@@ -36,9 +36,16 @@ export default function Oauth() {
             console.log("Backend response:", data);
 
             if (response.ok) {
+                // Save user information and session token to session storage
                 sessionStorage.setItem('authToken', credentialResponse.credential);
-                sessionStorage.setItem('userInfo', JSON.stringify(data.user));
+                sessionStorage.setItem('userInfo', JSON.stringify({
+                    name: data.user.name,
+                    role: data.user.role,
+                    picture: data.user.picture
+                }));
                 sessionStorage.setItem('sessionToken', data.token);
+
+                // Redirect based on user role
                 if (data.user.role === 'admin') {
                     navigate('/admin');
                 } else if (data.user.role === 'user') {
