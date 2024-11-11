@@ -6,7 +6,7 @@ import Oauth from "./components/Oauth";
 import UserDashboard from "./User/UserDashboard";
 import AdminDashboard from "./Admin/AdminDashboard";
 import UserDocuments from "./User/UserDocuments";
-import DocumentRequest from "./Admin/DocumentRequest";
+import DocumentRequest from "./User/DocumentRequest";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DisplayUser from "./Admin/DisplayUsers";
 
